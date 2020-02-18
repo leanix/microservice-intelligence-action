@@ -1,0 +1,12 @@
+name: "Microservice Intelligence"
+description: "Uses the LeanIX pivio integration to write microservice information to a workspace"
+inputs:
+  buildTool:
+    description: "Name of the build tool used to build the service. Values: [mvn, npm]"
+    required: true
+    default: "mvn"
+runs:
+  using: "docker"
+  image: "docker://leanix/microservice-intelligence-action:latest"
+  args:
+    - ${{ inputs.buildTool }}
