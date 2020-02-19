@@ -1,5 +1,5 @@
 FROM leanix/pivio-client:latest
 
-ADD entrpoint.sh entrpoint.sh
+ADD ./entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT [ "entrypoint.sh" ]

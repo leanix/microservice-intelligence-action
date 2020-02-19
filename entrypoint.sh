@@ -12,4 +12,4 @@ case $1 in
 esac
 
 eval $CMD
-java -jar /pivio.jar -serviceurl "${PIVIO_SERVICE_URL}" -addfield "api_token=${API_TOKEN}"
+java -jar /pivio.jar -serviceurl "https://int.leanix.net/services/integrations/v2/pivio/document" -addfield "api_token=${INT_LEANIX_NET_MICROSERVICES_API_TOKEN}"
