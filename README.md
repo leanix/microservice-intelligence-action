@@ -16,3 +16,5 @@ uses: leanix/microservice-intelligence-action@master
 with:
   buildTool: npm
 ```
+
+This action requires that you also use the "leanix/secrets-action@master".
