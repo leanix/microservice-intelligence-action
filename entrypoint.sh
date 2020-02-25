@@ -10,7 +10,7 @@ case $1 in
         export CMD="mvn -B org.codehaus.mojo:license-maven-plugin:download-licenses -U"
         ;;
     npm)
-        export CMD="npm-license-checker"
+        export CMD="/node_modules/license-checker/bin/license-checker --json > dependencies.json"
         ;;
 esac
 
