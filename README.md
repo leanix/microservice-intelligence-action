@@ -1,6 +1,7 @@
 # microservice-intelligence-action
 
 This action uses the LeanIX pivio integration to write microservice information to a workspace.
+It also includes increasing our deployment frequency metric. You do not longer need to also run the deprecated https://github.com/leanix/deployment-frequency-action
 
 ## Inputs
 
