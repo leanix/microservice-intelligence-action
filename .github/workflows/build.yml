@@ -10,3 +10,9 @@ jobs:
         with:
           secret-store-credentials: ${{ secrets.INJECTED_SECRET_STORE_CREDENTIALS }}
       - uses: leanix/release-docker-image-action@master
+      - uses: leanix/release-docker-image-action@master
+        with:
+          image: leanix/deployment-frequency-action
+          path: deployment-frequency/
+
+
