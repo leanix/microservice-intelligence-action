@@ -17,3 +17,7 @@ with:
 ```
 
 This action requires that you also use the "leanix/secrets-action@master".
+
+## Copyright and license
+
+Copyright 2020 LeanIX GmbH under the [Unlicense license](LICENSE).
