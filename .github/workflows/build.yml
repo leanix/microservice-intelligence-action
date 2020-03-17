@@ -12,7 +12,7 @@ jobs:
       - uses: leanix/release-docker-image-action@master
       - uses: leanix/release-docker-image-action@master
         with:
-          image: leanix/deployment-frequency-action
+          name: leanix/deployment-frequency-action
           path: deployment-frequency/
 
 
