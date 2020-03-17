@@ -7,6 +7,6 @@ inputs:
     default: "mvn"
 runs:
   using: "docker"
-  image: "docker://leanix/microservice-intelligence-action:feature-hook-1376-merge-actions-latest"
+  image: "docker://leanix/microservice-intelligence-action:latest"
   args:
     - ${{ inputs.buildTool }}
