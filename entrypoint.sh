@@ -14,6 +14,12 @@ case $1 in
         ;;
 esac
 
+docker run --rm \
+  -e GITHUB_REPOSITORY=$GITHUB_REPOSITORY \
+  -e INT_LEANIX_NET_MICROSERVICES_API_TOKEN=$INT_LEANIX_NET_MICROSERVICES_API_TOKEN \
+  -e INPUT_SERVICE_NAME=$INPUT_SERVICE_NAME \
+  leanix/deployment-frequency-action
+
 cd /github/workspace
 eval $CMD
 exec java -jar /pivio.jar -serviceurl "https://int.leanix.net/services/integrations/v2/pivio/document" -addfield "api_token=${INT_LEANIX_NET_MICROSERVICES_API_TOKEN}" -uploadfailexit1 -verbose
