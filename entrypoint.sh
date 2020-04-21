@@ -20,6 +20,8 @@ docker run --rm \
   -e INPUT_SERVICENAME=$INPUT_SERVICENAME \
   leanix/deployment-frequency-action
 
+docker run -v $(pwd):/app/cloud-beta/source-project leanix/microservice-intelligence-pivio-client run_cicd_pivio --host int.leanix.net --token $INT_LEANIX_NET_MICROSERVICES_API_TOKEN --file source-project/pivio.yaml
+
 cd /github/workspace
 eval $CMD
 exec java -jar /pivio.jar -serviceurl "https://int.leanix.net/services/integrations/v2/pivio/document" -addfield "api_token=${INT_LEANIX_NET_MICROSERVICES_API_TOKEN}" -uploadfailexit1 -verbose
