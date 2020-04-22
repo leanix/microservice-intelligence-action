@@ -20,7 +20,13 @@ docker run --rm \
   -e INPUT_SERVICENAME=$INPUT_SERVICENAME \
   leanix/deployment-frequency-action
 
-docker run -v $(pwd):/app/cloud-beta/source-project leanix/microservice-intelligence-pivio-client run_cicd_pivio --host int.leanix.net --token $INT_LEANIX_NET_MICROSERVICES_API_TOKEN --file source-project/pivio.yaml
+# Login to docker
+echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+
+docker run --rm \
+  -v $(pwd):/app/cloud-beta/source-project \
+  leanix/microservice-intelligence-pivio-client \
+  run_cicd_pivio --host int.leanix.net --token $INT_LEANIX_NET_MICROSERVICES_API_TOKEN --file source-project/pivio.yaml || true
 
 cd /github/workspace
 eval $CMD
