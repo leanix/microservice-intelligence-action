@@ -19,6 +19,7 @@ async function fetchLeadTimes(repo) {
                         .then(commit => Date.parse(pr.merged_at) - Date.parse(commit))
                         .then(durationMs => Math.ceil(durationMs / 1000 / 60))
                         .then(durationMin => ({
+                            baseBranch: repo.baseBranch,
                             repository: repo.name,
                             merged_at: pr.merged_at,
                             durationMin
@@ -29,13 +30,34 @@ async function fetchLeadTimes(repo) {
 }
 
 const repos = [
-    { name: 'camunda', baseBranch: 'master' }, 
+    { name: 'camunda', baseBranch: 'master' },
     { name: 'leanix-pathfinder', baseBranch: 'develop' }
 ];
 
 async function main() {
-    const results = await Promise.all(repos.map(repo => fetchLeadTimes(repo)));
-    console.log(results);
+    const prOpenTimes = await Promise.all(repos.map(repo => fetchLeadTimes(repo)));
+    const untilReleaseTimes = await Promise.all(prOpenTimes
+        .map(prOpenTimeOfRepo => Promise.all(prOpenTimeOfRepo
+            .filter(prOpenTime => prOpenTime.baseBranch != 'master')
+            .map(prOpenTime => fetch("https://api.github.com/repos/leanix/" + prOpenTime.repository + "/commits?sha=" + prOpenTime.baseBranch + "&since=" + prOpenTime.merged_at, { headers: myHeaders })
+                .then(response => response.json())
+                .then(commits => commits
+                    .map(commit => commit.commit)
+                    .filter(commit => commit.message.startsWith("Merge release branch"))
+                )
+                .then(commits => commits[commits.length - 1])
+                .then(commit => commit.committer.date)
+                .then(commitDate => Date.parse(commitDate) - Date.parse(prOpenTime.merged_at))
+                .then(durationMs => Math.ceil(durationMs / 1000 / 60))
+                .then(untilReleaseMin => ({
+                    repository: prOpenTime.repository,
+                    merged_at: prOpenTime.merged_at,
+                    untilReleaseMin
+                }))
+            ))
+        ));
+    console.log(prOpenTimes);
+    console.log(untilReleaseTimes);
 }
 
 main();
