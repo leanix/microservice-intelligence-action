@@ -15,6 +15,12 @@ fetch("https://api.github.com/repos/leanix/camunda/pulls?state=closed&base=maste
                     .then(response => response.json())
                     .then(commits => commits.map(commit => commit.commit.committer.date)[0])
                     .then(commit => Date.parse(pr.merged_at) - Date.parse(commit))
-                    .then(duration => console.log(Math.ceil(duration / 1000 / 60)));
+                    .then(durationMs => Math.ceil(durationMs / 1000 / 60))
+                    .then(durationMin => ({
+                        repository: 'camunda',
+                        merged_at: pr.merged_at,
+                        durationMin
+                    }))
+                    .then(info => console.log(info));
             })
     });
