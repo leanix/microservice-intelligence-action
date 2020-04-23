@@ -5,9 +5,10 @@ const myHeaders = {
     'Authorization': "token " + process.env.GITHUB_API_TOKEN
 };
 
+// TODO Handle develop
 // The maximum page size is 100
-async function fetchLeadTimes() {
-    return fetch("https://api.github.com/repos/leanix/camunda/pulls?state=closed&base=master&per_page=10", { headers: myHeaders })
+async function fetchLeadTimes(repo) {
+    return fetch("https://api.github.com/repos/leanix/" + repo.name + "/pulls?state=closed&base=" + repo.baseBranch + "&per_page=10", { headers: myHeaders })
         .then(response => response.json())
         .then(prs =>
             Promise.all(prs.filter(pr => pr.merged_at)
@@ -18,7 +19,7 @@ async function fetchLeadTimes() {
                         .then(commit => Date.parse(pr.merged_at) - Date.parse(commit))
                         .then(durationMs => Math.ceil(durationMs / 1000 / 60))
                         .then(durationMin => ({
-                            repository: 'camunda',
+                            repository: repo.name,
                             merged_at: pr.merged_at,
                             durationMin
                         }))
@@ -27,8 +28,13 @@ async function fetchLeadTimes() {
         )
 }
 
+const repos = [
+    { name: 'camunda', baseBranch: 'master' }, 
+    { name: 'leanix-pathfinder', baseBranch: 'develop' }
+];
+
 async function main() {
-    const results = await fetchLeadTimes();
+    const results = await Promise.all(repos.map(repo => fetchLeadTimes(repo)));
     console.log(results);
 }
 
