@@ -103,8 +103,17 @@ function createGitHubRequestObject(token) {
 
 async function main() {
     console.log("Start fetching branch life times...");
-    const branchLifeTimes = await Promise.all(_.flatMap(repos, repo => fetchBranchLifeTimes(environment.githubApiToken, repo)));
+    const branchLifeTimes = await Promise.all(repos.map(repo => fetchBranchLifeTimes(environment.githubApiToken, repo)))
+        .then(_.flatten);
     console.log("Finished fetching branch life times.");
+
+    const accessToken = await getAccessToken(environment.domain, environment.lxApiToken);
+    console.log("Start sending branch life times to metrics...");
+    await Promise.all(branchLifeTimes
+        .map(r => createMetricsPoint(environment.workspaceId, r.repository, 'branchLifeTime', r.durationMin, r.merged_at))
+        .map(metricsPoint => sendMetrics(environment.domain, accessToken, metricsPoint))
+    );
+    console.log("Finished sending branch life times to metrics.");
     
     console.log("Start fetching merge-until-release times...");
     const mergeUntilReleaseTimes = await Promise.all(branchLifeTimes
@@ -127,13 +136,6 @@ async function main() {
         ));
     console.log("Finished fetching merge-until-release times.");
 
-    const accessToken = await getAccessToken(environment.domain, environment.lxApiToken);
-    console.log("Start sending branch life times to metrics...");
-    await Promise.all(branchLifeTimes
-        .map(r => createMetricsPoint(environment.workspaceId, r.repository, 'branchLifeTime', r.durationMin, r.merged_at))
-        .map(metricsPoint => sendMetrics(environment.domain, accessToken, metricsPoint))
-    );
-    console.log("Finished sending branch life times to metrics.");
     console.log("Start sending merge-until-release times to metrics...");
     await Promise.all(mergeUntilReleaseTimes
         .map(r => createMetricsPoint(environment.workspaceId, r.repository, 'mergeUntilReleaseTime', r.untilReleaseMin, r.merged_at))
