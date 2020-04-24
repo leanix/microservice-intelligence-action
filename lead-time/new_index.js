@@ -101,6 +101,24 @@ function createGitHubRequestObject(token) {
     };
 }
 
+async function fetchMergeUntilReleaseTime(branchLifeTime) {
+    return fetch("https://api.github.com/repos/leanix/" + branchLifeTime.repository + "/commits?sha=" + branchLifeTime.baseBranch + "&since=" + branchLifeTime.merged_at, createGitHubRequestObject(environment.githubApiToken))
+        .then(response => response.json())
+        .then(commits => commits
+            .map(commit => commit.commit)
+            .filter(commit => commit.message.startsWith("Merge release branch"))
+        )
+        .then(commits => commits[commits.length - 1])
+        .then(commit => commit.committer.date)
+        .then(commitDate => Date.parse(commitDate) - Date.parse(branchLifeTime.merged_at))
+        .then(durationMs => Math.ceil(durationMs / 1000 / 60))
+        .then(untilReleaseMin => ({
+            repository: branchLifeTime.repository,
+            merged_at: branchLifeTime.merged_at,
+            untilReleaseMin
+        }));
+}
+
 async function main() {
     console.log("Start fetching branch life times...");
     const branchLifeTimes = await Promise.all(repos.map(repo => fetchBranchLifeTimes(environment.githubApiToken, repo)))
@@ -114,26 +132,12 @@ async function main() {
         .map(metricsPoint => sendMetrics(environment.domain, accessToken, metricsPoint))
     );
     console.log("Finished sending branch life times to metrics.");
-    
+
     console.log("Start fetching merge-until-release times...");
     const mergeUntilReleaseTimes = await Promise.all(branchLifeTimes
         .filter(branchLifeTime => branchLifeTime.baseBranch != 'master')
-        .map(branchLifeTime => fetch("https://api.github.com/repos/leanix/" + branchLifeTime.repository + "/commits?sha=" + branchLifeTime.baseBranch + "&since=" + branchLifeTime.merged_at, createGitHubRequestObject(environment.githubApiToken))
-            .then(response => response.json())
-            .then(commits => commits
-                .map(commit => commit.commit)
-                .filter(commit => commit.message.startsWith("Merge release branch"))
-            )
-            .then(commits => commits[commits.length - 1])
-            .then(commit => commit.committer.date)
-            .then(commitDate => Date.parse(commitDate) - Date.parse(branchLifeTime.merged_at))
-            .then(durationMs => Math.ceil(durationMs / 1000 / 60))
-            .then(untilReleaseMin => ({
-                repository: branchLifeTime.repository,
-                merged_at: branchLifeTime.merged_at,
-                untilReleaseMin
-            }))
-        ));
+        .map(branchLifeTime => fetchMergeUntilReleaseTime(branchLifeTime))
+    );
     console.log("Finished fetching merge-until-release times.");
 
     console.log("Start sending merge-until-release times to metrics...");
