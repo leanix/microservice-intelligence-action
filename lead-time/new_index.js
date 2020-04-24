@@ -46,9 +46,8 @@ async function sendMetrics(domain, accessToken, metricsPoint) {
     }
 }
 
-// TODO Handle develop
 // The maximum page size is 100
-async function fetchLeadTimes(token, repo) {
+async function fetchBranchLifeTimes(token, repo) {
     return fetch("https://api.github.com/repos/leanix/" + repo.name + "/pulls?state=closed&base=" + repo.baseBranch + "&per_page=100", createGitHubRequestObject(token))
         .then(response => response.json())
         .then(prs =>
@@ -103,13 +102,13 @@ function createGitHubRequestObject(token) {
 
 async function main() {
     console.log("Start fetching branch life times...");
-    const prOpenTimes = await Promise.all(repos.map(repo => fetchLeadTimes(environment.githubApiToken, repo)));
+    const branchLifeTimes = await Promise.all(repos.map(repo => fetchBranchLifeTimes(environment.githubApiToken, repo)));
     console.log("Finished fetching branch life times.");
     console.log("Start fetching merge-until-release times...");
-    const untilReleaseTimes = await Promise.all(prOpenTimes
-        .map(prOpenTimeOfRepo => Promise.all(prOpenTimeOfRepo
-            .filter(prOpenTime => prOpenTime.baseBranch != 'master')
-            .map(prOpenTime => fetch("https://api.github.com/repos/leanix/" + prOpenTime.repository + "/commits?sha=" + prOpenTime.baseBranch + "&since=" + prOpenTime.merged_at, createGitHubRequestObject(environment.githubApiToken))
+    const mergeUntilReleaseTimes = await Promise.all(branchLifeTimes
+        .map(branchLifeTimesOfRepo => Promise.all(branchLifeTimesOfRepo
+            .filter(branchLifeTime => branchLifeTime.baseBranch != 'master')
+            .map(branchLifeTime => fetch("https://api.github.com/repos/leanix/" + branchLifeTime.repository + "/commits?sha=" + branchLifeTime.baseBranch + "&since=" + branchLifeTime.merged_at, createGitHubRequestObject(environment.githubApiToken))
                 .then(response => response.json())
                 .then(commits => commits
                     .map(commit => commit.commit)
@@ -117,11 +116,11 @@ async function main() {
                 )
                 .then(commits => commits[commits.length - 1])
                 .then(commit => commit.committer.date)
-                .then(commitDate => Date.parse(commitDate) - Date.parse(prOpenTime.merged_at))
+                .then(commitDate => Date.parse(commitDate) - Date.parse(branchLifeTime.merged_at))
                 .then(durationMs => Math.ceil(durationMs / 1000 / 60))
                 .then(untilReleaseMin => ({
-                    repository: prOpenTime.repository,
-                    merged_at: prOpenTime.merged_at,
+                    repository: branchLifeTime.repository,
+                    merged_at: branchLifeTime.merged_at,
                     untilReleaseMin
                 }))
             ))
@@ -130,16 +129,16 @@ async function main() {
 
     const accessToken = await getAccessToken(environment.domain, environment.lxApiToken);
     console.log("Start sending branch life times to metrics...");
-    for (const prOpenTime of prOpenTimes) {
-        const responses = await Promise.all(prOpenTime
+    for (const branchLifeTime of branchLifeTimes) {
+        const responses = await Promise.all(branchLifeTime
             .map(r => createMetricsPoint(environment.workspaceId, r.repository, 'branchLifeTime', r.durationMin, r.merged_at))
             .map(metricsPoint => sendMetrics(environment.domain, accessToken, metricsPoint))
         );
     }
     console.log("Finished sending branch life times to metrics.");
     console.log("Start sending merge-until-release times to metrics...");
-    for (const untilReleaseTime of untilReleaseTimes) {
-        const responses = await Promise.all(untilReleaseTime
+    for (const mergeUntilReleaseTime of mergeUntilReleaseTimes) {
+        const responses = await Promise.all(mergeUntilReleaseTime
             .map(r => createMetricsPoint(environment.workspaceId, r.repository, 'mergeUntilReleaseTime', r.untilReleaseMin, r.merged_at))
             .map(metricsPoint => sendMetrics(environment.domain, accessToken, metricsPoint))
         );
