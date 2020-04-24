@@ -4,11 +4,16 @@ const request = require('request-promise-native');
 const _ = require('lodash');
 
 const environment = {
-    lxApiToken: 'YayamXVBL4RChnKEBYzGNjSLrYBdrnCagrrdEgW5',
+    lxApiToken: 'YayamXVBL4RChnKEBYzGNjSLrYBdrnCagrrdEgW5', // Non-production token
     domain: 'https://test-app-flow-2.leanix.net',
     workspaceId: '120d4a91-ece8-4888-9409-92400cc31a44',
-    githubApiToken: process.env.GITHUB_API_TOKEN
+    githubApiToken: process.env.GITHUB_API_TOKEN // Export GITHUB_API_TOKEN on your shell
 };
+
+const repos = [
+    { name: 'camunda', baseBranch: 'master' },
+    { name: 'leanix-pathfinder', baseBranch: 'develop' }
+];
 
 async function getAccessToken(domain, apiToken) {
     try {
@@ -47,8 +52,10 @@ async function sendMetrics(domain, accessToken, metricsPoint) {
     }
 }
 
-// The maximum page size is 100
 async function fetchBranchLifeTimes(token, repo) {
+    // TODO Resolve all pages to get all pull requests of a repository.
+    // The maximum page size is 100
+    // Note: GitHub rate limits its API.
     return fetch("https://api.github.com/repos/leanix/" + repo.name + "/pulls?state=closed&base=" + repo.baseBranch + "&per_page=100", createGitHubRequestObject(token))
         .then((response) => {
             if (!response.ok) {
@@ -88,11 +95,6 @@ async function fetchBranchLifeTimes(token, repo) {
         });
 }
 
-const repos = [
-    { name: 'camunda', baseBranch: 'master' },
-    { name: 'leanix-pathfinder', baseBranch: 'develop' }
-];
-
 function createMetricsPoint(workspaceId, repo, metric, value, timeStamp) {
     return {
         measurement: "leadtime_" + metric,
@@ -120,6 +122,7 @@ function createGitHubRequestObject(token) {
 }
 
 async function fetchMergeUntilReleaseTime(branchLifeTime) {
+    // TODO Since GitHub pages the commits and also always gives us the latest commits first, this is not correct.
     return fetch("https://api.github.com/repos/leanix/" + branchLifeTime.repository + "/commits?sha=" + branchLifeTime.baseBranch + "&since=" + branchLifeTime.merged_at, createGitHubRequestObject(environment.githubApiToken))
         .then((response) => {
             if (!response.ok) {
