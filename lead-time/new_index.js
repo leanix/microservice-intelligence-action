@@ -50,12 +50,22 @@ async function sendMetrics(domain, accessToken, metricsPoint) {
 // The maximum page size is 100
 async function fetchBranchLifeTimes(token, repo) {
     return fetch("https://api.github.com/repos/leanix/" + repo.name + "/pulls?state=closed&base=" + repo.baseBranch + "&per_page=100", createGitHubRequestObject(token))
-        .then(response => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
         .then(prs =>
             Promise.all(prs.filter(pr => pr.merged_at)
                 .map(pr =>
                     fetch(pr._links.commits.href, createGitHubRequestObject(token))
-                        .then(response => response.json())
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok: ' + response.statusText);
+                            }
+                            return response.json();
+                        })
                         .then(commits => commits.map(commit => commit.commit.committer.date)[0])
                         .then(commit => Date.parse(pr.merged_at) - Date.parse(commit))
                         .then(durationMs => Math.ceil(durationMs / 1000 / 60))
@@ -66,8 +76,16 @@ async function fetchBranchLifeTimes(token, repo) {
                             durationMin
                         }))
                 )
-            )
-        )
+            ).catch(reason => {
+                console.error("Could not fetch commits of PR " + pr.url);
+                console.error(reason);
+                return [];
+            })
+        ).catch(reason => {
+            console.error("Could not fetch any PRs!");
+            console.error(reason);
+            return [];
+        });
 }
 
 const repos = [
@@ -103,7 +121,12 @@ function createGitHubRequestObject(token) {
 
 async function fetchMergeUntilReleaseTime(branchLifeTime) {
     return fetch("https://api.github.com/repos/leanix/" + branchLifeTime.repository + "/commits?sha=" + branchLifeTime.baseBranch + "&since=" + branchLifeTime.merged_at, createGitHubRequestObject(environment.githubApiToken))
-        .then(response => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
         .then(commits => commits
             .map(commit => commit.commit)
             .filter(commit => commit.message.startsWith("Merge release branch"))
@@ -116,7 +139,11 @@ async function fetchMergeUntilReleaseTime(branchLifeTime) {
             repository: branchLifeTime.repository,
             merged_at: branchLifeTime.merged_at,
             untilReleaseMin
-        }));
+        })).catch(reason => {
+            console.error("Could not fetch commits since merge commit.");
+            console.error(branchLifeTime);
+            return [];
+        });
 }
 
 async function main() {
