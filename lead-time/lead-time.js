@@ -139,8 +139,9 @@ async function fetchMergeUntilReleaseTime(branchLifeTime) {
             repository: branchLifeTime.repository,
             merged_at: branchLifeTime.merged_at,
             untilReleaseMin
-        })).catch(reason => {
+        })).catch((reason) => {
             console.error("Could not fetch commits since merge commit.");
+            console.error(reason);
             console.error(branchLifeTime);
             return [];
         });
