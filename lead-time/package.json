@@ -1,0 +1,17 @@
+{
+  "name": "lead-time",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lead-time.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.8"
+  }
+}
