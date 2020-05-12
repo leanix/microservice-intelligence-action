@@ -2,8 +2,8 @@ const core = require('@actions/core');
 const request = require('request-promise-native');
 
 const MEASUREMENT = 'deployments';
-const WORKSPACE_ID = 'fb753d0f-8806-4bd5-8527-bd5ce4673969'
-const DOMAIN = 'https://int.leanix.net';
+const WORKSPACE_ID = 'fcf734f4-1ca2-4f2d-8540-c292f73a45bf'
+const DOMAIN = 'https://eu.leanix.net';
 const LEANIX_MULTIPLE_MICROSERVICES = 'leanix-multiple-microservices';
 
 async function getAccessToken(apiToken) {
