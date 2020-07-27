@@ -26,4 +26,4 @@ curl -X POST \
   -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
   -F api_token=YXBpdG9rZW46NzRqTXFMOGdPRzVjWmdyUk40QXJFeWI0dGdoVFNVSGptRUE2N1Z5cw== \
   -F host=demo-eu.leanix.net \
-  -F file=@source-project/pivio.yaml
+  -F file=@pivio.yaml
