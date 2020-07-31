@@ -13,11 +13,11 @@ echo "Now registering $INPUT_SERVICENAME with LeanIX"
 # Login to docker
 echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
 
-#(docker run --rm \
-#  -e GITHUB_REPOSITORY=$GITHUB_REPOSITORY \
-#  -e INT_LEANIX_NET_MICROSERVICES_API_TOKEN=$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
-#  -e INPUT_SERVICENAME=$INPUT_SERVICENAME \
-#  leanix/deployment-frequency-action) || true
+(docker run --rm \
+  -e GITHUB_REPOSITORY=$GITHUB_REPOSITORY \
+  -e INT_LEANIX_NET_MICROSERVICES_API_TOKEN=$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
+  -e INPUT_SERVICENAME=$INPUT_SERVICENAME \
+  leanix/deployment-frequency-action) || true
 
 curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
 -F 'api_token=YXBpdG9rZW46NzRqTXFMOGdPRzVjWmdyUk40QXJFeWI0dGdoVFNVSGptRUE2N1Z5cw==' \
