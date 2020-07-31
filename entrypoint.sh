@@ -19,11 +19,7 @@ echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdi
 #  -e INPUT_SERVICENAME=$INPUT_SERVICENAME \
 #  leanix/deployment-frequency-action) || true
 
-curl -X POST \
-  https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
-  -H 'Accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
-  -F api_token=YXBpdG9rZW46NzRqTXFMOGdPRzVjWmdyUk40QXJFeWI0dGdoVFNVSGptRUE2N1Z5cw== \
-  -F host=demo-eu.leanix.net \
-  -F file=@pivio.yaml
+curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
+-F 'api_token=YXBpdG9rZW46NzRqTXFMOGdPRzVjWmdyUk40QXJFeWI0dGdoVFNVSGptRUE2N1Z5cw==' \
+-F 'host=demo-eu.leanix.net' \
+-F 'file=@pivio.yaml'
