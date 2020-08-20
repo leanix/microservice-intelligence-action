@@ -20,6 +20,6 @@ echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdi
   leanix/deployment-frequency-action) || true
 
 curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
--F 'api_token=YXBpdG9rZW46NzRqTXFMOGdPRzVjWmdyUk40QXJFeWI0dGdoVFNVSGptRUE2N1Z5cw==' \
+-F 'api_token='$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
 -F 'host=demo-eu.leanix.net' \
 -F 'file=@pivio.yaml'
