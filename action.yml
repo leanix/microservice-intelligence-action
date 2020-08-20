@@ -7,4 +7,4 @@ inputs:
     default: ""
 runs:
   using: "docker"
-  image: "docker://leanix/microservice-intelligence-action:feature-LIXC-763-cicd-connector-latest"
+  image: "docker://leanix/microservice-intelligence-action:latest"
