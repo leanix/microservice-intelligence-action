@@ -3,12 +3,16 @@
 set -e
 
 GITHUB_REPOSITORY_SHORTNAME=
-
+PIVIO_FILE_PATH="@pivio.yaml"
 if [[ -z "$INPUT_SERVICENAME" ]]; then
   export INPUT_SERVICENAME=$(echo $GITHUB_REPOSITORY | cut -d "/" -f 2)
 fi
 
-echo "Now registering $INPUT_SERVICENAME with LeanIX"
+if [[ -z "$INPUT_CONFIGFILEPATH" ]]; then
+  export $INPUT_CONFIGFILEPATH="@pivio.yaml"
+fi
+
+echo "Now registering $INPUT_SERVICENAME with LeanIX with config file $INPUT_CONFIGFILEPATH"
 
 # Login to docker
 echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
@@ -22,4 +26,4 @@ echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdi
 curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
 -F 'api_token='$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
 -F 'host=demo-eu.leanix.net' \
--F 'file=@pivio.yaml'
+-F 'file='$PIVIO_FILE_PATH
