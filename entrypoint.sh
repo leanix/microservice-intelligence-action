@@ -8,8 +8,8 @@ if [[ -z "$INPUT_SERVICENAME" ]]; then
   export INPUT_SERVICENAME=$(echo $GITHUB_REPOSITORY | cut -d "/" -f 2)
 fi
 
-if [[ -z "$INPUT_CONFIGFILEPATH" ]]; then
-  export $INPUT_CONFIGFILEPATH="@pivio.yaml"
+if [[ -n "$INPUT_CONFIGFILEPATH" ]]; then
+  export PIVIO_FILE_PATH="@$INPUT_CONFIGFILEPATH"
 fi
 
 echo "Now registering $INPUT_SERVICENAME with LeanIX with config file $INPUT_CONFIGFILEPATH"
