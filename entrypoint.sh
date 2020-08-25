@@ -3,7 +3,6 @@
 set -e
 
 GITHUB_REPOSITORY_SHORTNAME=
-PIVIO_FILE_PATH="@pivio.yaml"
 if [[ -z "$INPUT_SERVICENAME" ]]; then
   export INPUT_SERVICENAME=$(echo $GITHUB_REPOSITORY | cut -d "/" -f 2)
 fi
