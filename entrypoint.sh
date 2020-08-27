@@ -29,9 +29,9 @@ if [[ -f "pom.xml" ]]; then
   curl -X POST \
     'https://demo-eu.leanix.net/services/cicd-connector/v1/dependencies?source=mvn&externalId='$INPUT_SERVICENAME \
     -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
-    -F api_token=D8PEuLM4w4D6kf965vvKyTwsF9uHWW4YgdZV2MtO \
-    -F host=demo-eu.leanix.net \
-    -F file=@target/generated-resources/licenses.xml
+    -F 'api_token=D8PEuLM4w4D6kf965vvKyTwsF9uHWW4YgdZV2MtO' \
+    -F 'host=demo-eu.leanix.net' \
+    -F 'file=@target/generated-resources/licenses.xml'
 else 
   if [[ -f "package.json" ]]; then
     echo "Npm repository detected"
@@ -40,9 +40,9 @@ else
     curl -X POST \
       'https://demo-eu.leanix.net/services/cicd-connector/v1/dependencies?source=npm&externalId='$INPUT_SERVICENAME \
       -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
-      -F api_token=D8PEuLM4w4D6kf965vvKyTwsF9uHWW4YgdZV2MtO \
-      -F host=demo-eu.leanix.net \
-      -F file=@dependencies.json
+      -F 'api_token=D8PEuLM4w4D6kf965vvKyTwsF9uHWW4YgdZV2MtO' \
+      -F 'host=demo-eu.leanix.net' \
+      -F 'file=@dependencies.json'
   else 
     echo "No valid repository detected"
   fi
