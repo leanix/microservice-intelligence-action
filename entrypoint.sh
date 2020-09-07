@@ -25,6 +25,10 @@ curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
 
 if [[ -f "pom.xml" ]]; then
   echo "Mvn repository detected"
+  
+  unset JAVA_HOME 
+  unset JAVA_HOME_11.0.8_x64 
+
   mvn org.codehaus.mojo:license-maven-plugin:download-licenses
   curl -X POST \
     'https://demo-eu.leanix.net/services/cicd-connector/v1/dependencies?source=mvn&externalId='$INPUT_SERVICENAME \
