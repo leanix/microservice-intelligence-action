@@ -23,6 +23,12 @@ curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
 -F 'host=demo-eu.leanix.net' \
 -F 'file=@'$INPUT_CONFIGFILEPATH
 
+# Trigger metadata extraction for sandbox environment as well
+curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
+-F 'api_token=D8PEuLM4w4D6kf965vvKyTwsF9uHWW4YgdZV2MtO' \
+-F 'host=demo-eu.leanix.net' \
+-F 'file=@'$INPUT_CONFIGFILEPATH
+
 if [[ -f "pom.xml" ]]; then
   echo "Mvn repository detected"
   
