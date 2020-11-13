@@ -7,28 +7,29 @@ if [[ -z "$INPUT_SERVICENAME" ]]; then
   export INPUT_SERVICENAME=$(echo $GITHUB_REPOSITORY | cut -d "/" -f 2)
 fi
 
-echo "Now registering $INPUT_SERVICENAME with LeanIX with config file $INPUT_CONFIGFILEPATH"
-
 # Login to docker
 echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
 
+echo "Updating deployment frequency"
 (docker run --rm \
   -e GITHUB_REPOSITORY=$GITHUB_REPOSITORY \
   -e INT_LEANIX_NET_MICROSERVICES_API_TOKEN=$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
   -e INPUT_SERVICENAME=$INPUT_SERVICENAME \
   leanix/deployment-frequency-action) || true
 
+echo "Updating service metadata"
 curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
 -F 'api_token='$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
 -F 'host=demo-eu.leanix.net' \
 -F 'file=@'$INPUT_CONFIGFILEPATH
 
-# Trigger metadata extraction for sandbox environment as well
+echo "Updating service metadata (sandbox)"
 curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
 -F "api_token=${MI_DEV_WORKSPACE_API_TOKEN}" \
 -F 'host=demo-eu.leanix.net' \
 -F 'file=@'$INPUT_CONFIGFILEPATH
 
+echo "Updating libraries and licenses"
 if [[ -f "pom.xml" ]]; then
   echo "Mvn repository detected"
   unset JAVA_HOME 
