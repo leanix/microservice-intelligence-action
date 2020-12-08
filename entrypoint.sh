@@ -18,9 +18,9 @@ echo "Updating deployment frequency"
   leanix/deployment-frequency-action) || true
 
 echo "Updating service metadata"
-curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
+curl -X POST https://eu.leanix.net/services/cicd-connector/v1/metadata \
 -F 'api_token='$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
--F 'host=demo-eu.leanix.net' \
+-F 'host=eu.leanix.net' \
 -F 'file=@'$INPUT_CONFIGFILEPATH
 
 echo "Updating libraries and licenses"
@@ -29,10 +29,10 @@ if [[ -f "pom.xml" ]]; then
   unset JAVA_HOME 
   mvn org.codehaus.mojo:license-maven-plugin:download-licenses
   curl -X POST \
-    'https://demo-eu.leanix.net/services/cicd-connector/v1/dependencies?source=mvn&externalId='$INPUT_SERVICENAME \
+    'https://eu.leanix.net/services/cicd-connector/v1/dependencies?source=mvn&externalId='$INPUT_SERVICENAME \
     -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
     -F "api_token=${MI_DEV_WORKSPACE_API_TOKEN}" \
-    -F 'host=demo-eu.leanix.net' \
+    -F 'host=eu.leanix.net' \
     -F 'file=@target/generated-resources/licenses.xml'
 else 
   if [[ -f "package.json" ]]; then
@@ -40,10 +40,10 @@ else
     npm install -g license-checker
     license-checker --json > dependencies.json
     curl -X POST \
-      'https://demo-eu.leanix.net/services/cicd-connector/v1/dependencies?source=npm&externalId='$INPUT_SERVICENAME \
+      'https://eu.leanix.net/services/cicd-connector/v1/dependencies?source=npm&externalId='$INPUT_SERVICENAME \
       -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
       -F "api_token=${MI_DEV_WORKSPACE_API_TOKEN}" \
-      -F 'host=demo-eu.leanix.net' \
+      -F 'host=eu.leanix.net' \
       -F 'file=@dependencies.json'
   else 
     echo "No valid repository detected"
