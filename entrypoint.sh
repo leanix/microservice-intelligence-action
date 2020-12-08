@@ -23,12 +23,6 @@ curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
 -F 'host=demo-eu.leanix.net' \
 -F 'file=@'$INPUT_CONFIGFILEPATH
 
-echo "Updating service metadata (sandbox)"
-curl -X POST https://demo-eu.leanix.net/services/cicd-connector/v1/metadata \
--F "api_token=${MI_DEV_WORKSPACE_API_TOKEN}" \
--F 'host=demo-eu.leanix.net' \
--F 'file=@'$INPUT_CONFIGFILEPATH
-
 echo "Updating libraries and licenses"
 if [[ -f "pom.xml" ]]; then
   echo "Mvn repository detected"
