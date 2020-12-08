@@ -31,7 +31,7 @@ if [[ -f "pom.xml" ]]; then
   curl -X POST \
     'https://eu.leanix.net/services/cicd-connector/v1/dependencies?source=mvn&externalId='$INPUT_SERVICENAME \
     -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
-    -F "api_token=${MI_DEV_WORKSPACE_API_TOKEN}" \
+    -F "api_token=${EU_LEANIX_NET_MICROSERVICES_API_TOKEN}" \
     -F 'host=eu.leanix.net' \
     -F 'file=@target/generated-resources/licenses.xml'
 else 
@@ -42,7 +42,7 @@ else
     curl -X POST \
       'https://eu.leanix.net/services/cicd-connector/v1/dependencies?source=npm&externalId='$INPUT_SERVICENAME \
       -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
-      -F "api_token=${MI_DEV_WORKSPACE_API_TOKEN}" \
+      -F "api_token=${EU_LEANIX_NET_MICROSERVICES_API_TOKEN}" \
       -F 'host=eu.leanix.net' \
       -F 'file=@dependencies.json'
   else 
