@@ -5,17 +5,20 @@ It also includes increasing our deployment frequency metric. You do not longer n
 
 ## Inputs
 
-* `buildTool`    Build tool used for this project (`mvn` or `npm`), defaults to `mvn`
 * `serviceName`  Name of the service when pushing the deployment frequency metric, defaults to the short name of the repository
 * `configFilePath`  File path of the config file at the repository describing the microservice, defaults to the `pivio.yaml` at the top root directory
+* `additionalMavenParameters` If maven is used to scan for license
+  information, these parameters are appended to the maven call. This
+  allows for example usage of credentials for specific maven repos before
+  executing the scan.
 
 ## Example usage
 ```
 uses: leanix/microservice-intelligence-action@master
 with:
-  buildTool: npm
   serviceName: foo
   configFilePath: /packages/service1/pivio.yaml
+  additionalMavenParameters: "-s settings.xml"
 ```
 
 This action requires that you also use the "leanix/secrets-action@master".
