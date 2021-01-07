@@ -27,7 +27,7 @@ echo "Updating libraries and licenses"
 if [[ -f "pom.xml" ]]; then
   echo "Mvn repository detected"
   unset JAVA_HOME 
-  mvn org.codehaus.mojo:license-maven-plugin:download-licenses
+  mvn org.codehaus.mojo:license-maven-plugin:download-licenses $INPUT_ADDITIONALMAVENPARAMETERS
   curl -X POST \
     'https://eu.leanix.net/services/cicd-connector/v1/dependencies?source=mvn&externalId='$INPUT_SERVICENAME \
     -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' \
