@@ -9,6 +9,10 @@ inputs:
     description: "Path of the config file describing the microservice"
     required: false
     default: "pivio.yaml"
+  additionalMavenParameters:
+    description: "Defines parameters that are added to maven calls as a suffix. Use case: Configure maven repo credentials for license scan"
+    required: false
+    default: ""
 runs:
   using: "docker"
   image: "docker://leanix/microservice-intelligence-action:latest"
