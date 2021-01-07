@@ -4,12 +4,16 @@ jobs:
   main:
     name: build-${{ github.run_number }}
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v2
+
       - uses: leanix/secrets-action@master
         with:
           secret-store-credentials: ${{ secrets.INJECTED_SECRET_STORE_CREDENTIALS }}
+
       - uses: leanix/release-docker-image-action@master
+
       - uses: leanix/release-docker-image-action@master
         with:
           name: leanix/deployment-frequency-action
