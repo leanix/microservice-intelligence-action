@@ -6,7 +6,6 @@ It also includes increasing our deployment frequency metric. You do not longer n
 ## Inputs
 
 * `serviceName`  Name of the service when pushing the deployment frequency metric, defaults to the short name of the repository
-* `configFilePath`  File path of the config file at the repository describing the microservice, defaults to the `pivio.yaml` at the top root directory
 * `additionalMavenParameters` If maven is used to scan for license
   information, these parameters are appended to the maven call. This
   allows for example usage of credentials for specific maven repos before
@@ -17,7 +16,6 @@ It also includes increasing our deployment frequency metric. You do not longer n
 uses: leanix/microservice-intelligence-action@master
 with:
   serviceName: foo
-  configFilePath: /packages/service1/pivio.yaml
   additionalMavenParameters: "-s settings.xml"
 ```
 
