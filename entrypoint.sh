@@ -17,12 +17,6 @@ echo "Updating deployment frequency"
   -e INPUT_SERVICENAME=$INPUT_SERVICENAME \
   leanix/deployment-frequency-action) || true
 
-echo "Updating service metadata"
-curl -X POST https://eu.leanix.net/services/cicd-connector/v1/metadata \
--F 'api_token='$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
--F 'host=eu.leanix.net' \
--F 'file=@'$INPUT_CONFIGFILEPATH
-
 echo "Updating libraries and licenses"
 if [[ -f "pom.xml" ]]; then
   echo "Mvn repository detected"
