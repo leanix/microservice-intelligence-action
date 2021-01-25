@@ -17,6 +17,15 @@ echo "Updating deployment frequency"
   -e INPUT_SERVICENAME=$INPUT_SERVICENAME \
   leanix/deployment-frequency-action) || true
 
+echo "Running MI Github Connector"
+(docker run --rm \
+  -e GITHUB_WORKSPACE \
+  -e GITHUB_REPOSITORY \
+  -e GITHUB_API_URL \
+  -e GITHUB_TOKEN \
+  -e LEANIX_API_TOKEN=$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
+  leanix/leanix-mi-github-connector) || true
+
 echo "Updating libraries and licenses"
 if [[ -f "pom.xml" ]]; then
   echo "Mvn repository detected"
