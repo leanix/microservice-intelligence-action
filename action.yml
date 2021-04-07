@@ -11,4 +11,4 @@ inputs:
     default: ""
 runs:
   using: "docker"
-  image: "docker://leanix/microservice-intelligence-action:latest"
+  image: "docker://leanixacrpublic.azurecr.io/microservice-intelligence-action:latest"
