@@ -13,10 +13,11 @@ jobs:
           secret-store-credentials: ${{ secrets.INJECTED_SECRET_STORE_CREDENTIALS }}
 
       - uses: leanix/release-docker-image-action@master
+        with:
+          registry: acr-public
 
       - uses: leanix/release-docker-image-action@master
         with:
           name: leanix/deployment-frequency-action
           path: deployment-frequency/
-
-
+          registry: acr-public
