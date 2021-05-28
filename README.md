@@ -5,18 +5,21 @@ It also includes increasing our deployment frequency metric. You do not longer n
 
 ## Inputs
 
-* `serviceName`  Name of the service when pushing the deployment frequency metric, defaults to the short name of the repository
-* `additionalMavenParameters` If maven is used to scan for license
+- `serviceName` Name of the service when pushing the deployment frequency metric, defaults to the short name of the repository.
+- `additionalMavenParameters` If maven is used to scan for license
   information, these parameters are appended to the maven call. This
   allows for example usage of credentials for specific maven repos before
   executing the scan.
+- `codeCoverage` Optional test code coverage percentage to be posted the code coverage time series in Microservice Intelligence.
 
 ## Example usage
+
 ```
 uses: leanix/microservice-intelligence-action@master
 with:
   serviceName: foo
   additionalMavenParameters: "-s settings.xml"
+  codeCoverage: 99.9876
 ```
 
 This action requires that you also use the "leanix/secrets-action@master".
