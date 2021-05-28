@@ -9,6 +9,10 @@ inputs:
     description: "Defines parameters that are added to maven calls as a suffix. Use case: Configure maven repo credentials for license scan"
     required: false
     default: ""
+  codeCoverage:
+    description: "Percentage of the test code coverage (determined in a previous step) to be posted to MI and tagged with the service name"
+    required: false
+    default: ""
 runs:
   using: "docker"
   image: "docker://leanixacrpublic.azurecr.io/microservice-intelligence-action:latest"

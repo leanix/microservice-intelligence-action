@@ -17,6 +17,12 @@ echo "Updating deployment frequency"
   -e INPUT_SERVICENAME=$INPUT_SERVICENAME \
   leanix/deployment-frequency-action) || true
 
+echo "Updating code coverage"
+(docker run --rm \
+  -e GITHUB_REPOSITORY=$GITHUB_REPOSITORY \
+  -e INT_LEANIX_NET_MICROSERVICES_API_TOKEN=$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
+  leanix/code-coverage-action) || true
+
 echo "Running MI Github Connector"
 (docker run --rm \
   -e GITHUB_WORKSPACE \
@@ -29,7 +35,7 @@ echo "Running MI Github Connector"
 echo "Updating libraries and licenses"
 if [[ -f "pom.xml" ]]; then
   echo "Mvn repository detected"
-  unset JAVA_HOME 
+  unset JAVA_HOME
   mvn org.codehaus.mojo:license-maven-plugin:download-licenses $INPUT_ADDITIONALMAVENPARAMETERS
   curl -X POST \
     'https://eu.leanix.net/services/cicd-connector/v1/dependencies?source=mvn&externalId='$INPUT_SERVICENAME \
@@ -37,7 +43,7 @@ if [[ -f "pom.xml" ]]; then
     -F "api_token=${EU_LEANIX_NET_MICROSERVICES_API_TOKEN}" \
     -F 'host=eu.leanix.net' \
     -F 'file=@target/generated-resources/licenses.xml'
-else 
+else
   if [[ -f "package.json" ]]; then
     echo "Npm repository detected"
     npm install -g license-checker
@@ -48,7 +54,7 @@ else
       -F "api_token=${EU_LEANIX_NET_MICROSERVICES_API_TOKEN}" \
       -F 'host=eu.leanix.net' \
       -F 'file=@dependencies.json'
-  else 
+  else
     echo "No valid repository detected"
   fi
 fi
