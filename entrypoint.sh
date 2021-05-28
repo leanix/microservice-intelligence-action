@@ -15,13 +15,13 @@ echo "Updating deployment frequency"
   -e GITHUB_REPOSITORY=$GITHUB_REPOSITORY \
   -e INT_LEANIX_NET_MICROSERVICES_API_TOKEN=$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
   -e INPUT_SERVICENAME=$INPUT_SERVICENAME \
-  leanix/deployment-frequency-action) || true
+  leanixacrpublic.azurecr.io/deployment-frequency-action) || true
 
 echo "Updating code coverage"
 (docker run --rm \
   -e GITHUB_REPOSITORY=$GITHUB_REPOSITORY \
   -e INT_LEANIX_NET_MICROSERVICES_API_TOKEN=$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
-  leanix/code-coverage-action) || true
+  leanixacrpublic.azurecr.io/code-coverage-action) || true
 
 echo "Running MI Github Connector"
 (docker run --rm \
@@ -30,7 +30,7 @@ echo "Running MI Github Connector"
   -e GITHUB_API_URL \
   -e GITHUB_TOKEN \
   -e LEANIX_API_TOKEN=$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
-  leanix/leanix-mi-github-connector) || true
+  leanixacrpublic.azurecr.io/leanix-mi-github-connector) || true
 
 echo "Updating libraries and licenses"
 if [[ -f "pom.xml" ]]; then
