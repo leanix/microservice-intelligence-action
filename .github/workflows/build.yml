@@ -21,3 +21,9 @@ jobs:
           name: leanix/deployment-frequency-action
           path: deployment-frequency/
           registry: acr-public
+
+      - uses: leanix/release-docker-image-action@master
+        with:
+          name: leanix/code-coverage-action
+          path: code-coverage/
+          registry: acr-public
