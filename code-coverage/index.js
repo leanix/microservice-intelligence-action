@@ -1,4 +1,3 @@
-const core = require('@actions/core');
 const request = require('request-promise-native');
 
 const MEASUREMENT = 'code-coverage-v2';
@@ -66,7 +65,7 @@ async function main() {
   console.log("Started code coverage update...");
 
   try {
-    let coverage = core.getInput('codeCoverage');
+    let coverage = process.env.INPUT_CODECOVERAGE;
     console.log(`Coverage param set to ${coverage}`);
 
     coverage = parseInt(coverage);
@@ -75,7 +74,7 @@ async function main() {
         throw `Invalid coverage: ${coverage}`;
       }
 
-      let microservice = core.getInput('serviceName');
+      let microservice = process.env.INPUT_SERVICENAME;
       if (!microservice) {
           microservice = process.env.GITHUB_REPOSITORY.split('/')[1];
       }
@@ -89,7 +88,7 @@ async function main() {
       console.log(JSON.stringify(result));
     }
   } catch (error) {
-    core.setFailed(error.message);
+    console.error(error.message);
   }
 }
 
