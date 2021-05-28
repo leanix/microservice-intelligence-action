@@ -63,8 +63,12 @@ async function sendMetrics(accessToken, metricsPoint) {
 }
 
 async function main() {
+  console.log("Started code coverage update...");
+
   try {
     let coverage = core.getInput('codeCoverage');
+    console.log(`Coverage param set to ${coverage}`);
+
     coverage = parseInt(coverage);
     if (coverage) {
       if (coverage < 0 || isNaN(coverage)) {
@@ -85,7 +89,6 @@ async function main() {
       console.log(JSON.stringify(result));
     }
   } catch (error) {
-    console.error(error.message);
     core.setFailed(error.message);
   }
 }
