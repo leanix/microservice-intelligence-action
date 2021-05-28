@@ -28,23 +28,19 @@ async function getAccessToken(apiToken) {
 }
 
 function generateMetricsPoint(serviceName, coverage) {
-  // If the service name is the special symbol 'leanix-multiple-microservices'
-  // we only add the point to the project, not the application itself (... as there isn't such)
-  const additionalTag = (serviceName == LEANIX_MULTIPLE_MICROSERVICES) ?
-    [] : [{ k: 'externalIdApplication', v: `${serviceName}` }];
-
   return {
     measurement: MEASUREMENT,
     workspaceId: WORKSPACE_ID,
     time: new Date().toISOString(),
-    tags: [...additionalTag, {
-      k: 'externalIdProject',
-      v: 'accelerateEngineering'
-    }
+    tags: [
+      {
+        k: 'externalIdApplication',
+        v: `${serviceName}`
+      }
     ],
     fields: [
       {
-        k: `${serviceName}`,
+        k: 'coverage',
         v: coverage
       }
     ]
