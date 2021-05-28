@@ -62,13 +62,8 @@ async function sendMetrics(accessToken, metricsPoint) {
 }
 
 async function main() {
-  console.log("Started code coverage update...");
-
   try {
-    let coverage = process.env.INPUT_CODECOVERAGE;
-    console.log(`Coverage param set to ${coverage}`);
-
-    coverage = parseInt(coverage);
+    let coverage = parseFloat(process.env.INPUT_CODECOVERAGE);
     if (coverage) {
       if (coverage < 0 || isNaN(coverage)) {
         throw `Invalid coverage: ${coverage}`;
