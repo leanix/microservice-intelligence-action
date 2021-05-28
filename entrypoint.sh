@@ -8,7 +8,7 @@ if [[ -z "$INPUT_SERVICENAME" ]]; then
 fi
 
 # Login to docker
-echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+echo $ACR_PUBLIC_PASSWORD | docker login -u $ACR_PUBLIC_USERNAME --password-stdin leanixacrpublic.azurecr.io
 
 echo "Updating deployment frequency"
 (docker run --rm \
