@@ -1,5 +1,5 @@
 {
-  "name": "deployment-frequency-action",
+  "name": "code-coverage-action",
   "private": true,
   "main": "dist/index.js",
   "scripts": {
