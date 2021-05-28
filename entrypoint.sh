@@ -30,7 +30,7 @@ echo "Running MI Github Connector"
   -e GITHUB_API_URL \
   -e GITHUB_TOKEN \
   -e LEANIX_API_TOKEN=$EU_LEANIX_NET_MICROSERVICES_API_TOKEN \
-  leanixacrpublic.azurecr.io/leanix-mi-github-connector) || true
+  leanix/leanix-mi-github-connector) || true
 
 echo "Updating libraries and licenses"
 if [[ -f "pom.xml" ]]; then
